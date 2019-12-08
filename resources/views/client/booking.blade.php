@@ -525,7 +525,7 @@
                                                     <h5>Choose your service</h5>
                                                 </div>
                                                 <div>
-                                                <form action="clientBooking" method="post">
+                                                <form action="{{route('client.clientBooking')}}" method="post">
                                                 @csrf
 
                                                     <!-- Service Name -->
@@ -550,7 +550,7 @@
                                                             <label class="custom-control-label" for="oneTime">One Time</label>
                                                         </div>
                                                         <div class="custom-control custom-radio custom-control-inline">
-                                                            <input type="radio" id="reccureTime" name="serviceMethod" class="custom-control-input" value="2">
+                                                            <input type="radio" id="reccureTime" name="serviceMethod" class="custom-control-input" value="0">
                                                             <label class="custom-control-label" for="reccureTime">Reccrring Times</label>
                                                         </div>
                                                     </div>
@@ -578,7 +578,6 @@
 
                                                     <!-- One Time or One Month Date and Time -->
                                                     <div class="card-body option-part2">
-                                                    <form action="{{route('client.selectProvider.onetime')}}" method="post">
                                                         <div class="row">
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
@@ -637,7 +636,6 @@
                                                             </div>
                                                         </div>
                                                         <button class="btn btn-primary" type="submit">Submit</button>
-                                                    </form>
                                                     </div>
 
                                                     <!-- Reccure Time Week Day and Time -->
@@ -645,16 +643,8 @@
                                                         <div class="row">
                                                             <div class="col-md-4">
                                                                 <div class="form-group">
-                                                                    <label>Select service day</label>
-                                                                    <select name="day" class="form-control select2 input3" data-toggle="select2">
-                                                                        <option >Monday</option>
-                                                                        <option >Tuesday</option>
-                                                                        <option >Wednesday</option>
-                                                                        <option >Thirsday</option>
-                                                                        <option >Friday</option>
-                                                                        <option >Saturday</option>
-                                                                        <option >Sunday</option>
-                                                                    </select>
+                                                                    <label>Date Range</label>
+                                                                    <input type="text" name="range" class="form-control date input3" id="singledaterange" data-toggle="date-picker" data-cancel-class="btn-warning">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4">
@@ -750,6 +740,10 @@
         <script src="{{ asset('assets/js/calendar.js') }}"></script>
         <!-- custom party js ends -->
         <script>
+
+
+
+          $('#singledaterange').daterangepicker();
           $('#calendar').fullCalendar({
             header: {
                 left: 'prev,next today',

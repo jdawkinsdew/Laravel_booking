@@ -9,6 +9,9 @@ use App\Blockdays;
 use App\Booking;
 use App\Availableservice;
 use Carbon\Carbon;
+use Toastr;
+use File;
+
 
 class MainController extends Controller
 {
@@ -26,27 +29,10 @@ class MainController extends Controller
         return view('client.booking', compact('allservices', 'areas', 'today', 'allBlockdays', 'allBookings', 'availableServices'));
     }
 
-    public function addBooking(Request $request){
+    
+   public function selectProvider(Request $request)
+    {
         dd($request);
-        $allservices = Service::all();
-        $areas = Managed_Area::all();
-        return view('client.booking', compact('allservices', 'areas'));
-    }
-
-    public function findProvider($date)
-    {
-      $free_providers = [];
-      $all_providers = Provider::all();
-       foreach($bookings as $booking)
-              {
-                if(Carbon::parse($booking->date)->format('Y-m-d') == $str_year_month)
-                {
-                  $disp_year_month[$k]++;
-                }         
-              }            
-    }
-    public function selectProvider(Request $request)
-    {
         $serviceType = $request->serviceMethod;
         if($serviceType == 1)
         {
@@ -57,15 +43,116 @@ class MainController extends Controller
         $booking_add_on = $request->serviceAddName;
         $booking_bulk = $request->bulk;
         $booking_address = $request->address;
-        $booking_zipcode = $request->zipcode;
-
-  
+        $booking_zipcode = $request->zipcode; 
         }
       
- 
-        dd($request);
+       $block_providers = Blockdays::where('date',$date)->provider();
+     
+        // dd($block_providers);
         return true;
     }
+
+    public function saveBooking($id,$data)
+    {
+        if($data->get('serviceMethod')){
+            $booking = new Booking();
+            $booking->provider_id = $id;
+            $booking->client_id = 1;
+            $booking->service_id = $data['serviceName'];
+            $booking->date = $data['date'];
+            $booking->start_time = $data['timeFrom'];
+            $booking->finish_time = $data['timeTo'];
+            $booking->price = $data['serviceName'];
+            $booking->status = "pending";
+            $booking->duration = $data['date'];
+            $booking->recurr_type = 1;
+            $booking->save();
+        }
+        else{
+            $booking = new Booking();
+            $booking->provider_id = $id;
+            $booking->client_id = 1;
+            $booking->service_id = $data['serviceName'];
+            $booking->date = Carbon::now()->format('Y-m-d');
+            $booking->start_time = $data['timeFrom'];
+            $booking->finish_time = $data['timeTo'];
+            $booking->price = $data['serviceName'];
+            $booking->status = "pending";
+            $booking->duration = $data['range'];
+            $booking->recurr_type = 0;
+            $booking->save();
+        }
+    }
+    
+    public function addBooking(Request $request){
+        $flag = 0;
+        $today = $request->get('date');
+        // dd($request);
+        if($request->serviceMethod)
+        {
+            $servID = $request->get('serviceName');
+            $service = Service::find($servID);
+            $avail_providers = $service->providers;
+            foreach($avail_providers as $provider)
+            {
+                if(!$provider->block_days->where('date', $today)->count()){
+                    if(!$provider->bookings->where('date', $today)->count()){
+                        $this->saveBooking($provider['id'],$request);
+                        return "success!";
+                    }
+                }                           
+            }
+            if(!$flag)
+            {              
+            Toastr::success('Your Order can be successful!');
+            // return "TRUE";
+            }else{
+                Toastr::error("You can't receive this service this day!");
+                // return "FALSE";
+            }
+        }else{
+            $daterange = $request->get('range');
+            $start_date = Carbon::parse(substr($daterange, 0, 10))->format('Y-m-d');
+            $end_date = Carbon::parse(substr($daterange, 13, 23))->format('Y-m-d');
+            $servID = $request->get('serviceName');
+            $service = Service::find($servID);
+            $avail_providers = $service->providers;
+            $reccureType = $request->get('reccureType');
+            foreach($avail_providers as $provider) {
+                $from_date = $start_date;
+                $availableCount = 0;
+                $allCount = 0;
+                do {
+                    $date = Carbon::parse($from_date);
+                    $date->addWeek($reccureType);
+                    $date = Carbon::parse($date)->format('Y-m-d');
+                    if($provider->block_days->where('date', $date)->count()==0 && $provider->bookings->where('date', $date)->count()==0){
+                        $availableCount++;
+                    }
+                    $allCount++;
+                    $from_date = $date;
+                } while ($from_date <= $end_date);
+                if($availableCount == $allCount)
+                {
+                    $this->saveBooking($provider['id'],$request);
+                }
+            }
+            dd($start_date);
+        }        
+    }
+
+    public function checkProvider($servID,$today)
+    {
+        $service = Service::find($servID);
+        $avail_providers = $service->providers;
+        $data =  $avail_providers;
+        foreach($avail_providers as $key => $provider) {
+            if($provider->block_days->where('date', $today)->count()>0 || $provider->bookings->where('date', $today)->count()>0){
+                array_splice($data,$key,1);
+             }            
+        }
+    }
+
     public function selectAjax(Request $request)
     {
         try{
