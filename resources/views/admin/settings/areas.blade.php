@@ -177,84 +177,83 @@
                         });    
                     }
                 }); 
-            }
-
-            $(".btn_saveChange").click(function(){
-
-                var edit_id, edit_name, edit_zipcode, edit_color, addTr;
-
-                edit_id = $("#edt_mArea").val();
-                edit_name = $("#edit_mArea").val();
-                edit_zipcode = $("#edit_mAreasZipCode").val();
-                edit_color = $("#edit_mAreaColor").val();   
-                        
-                if($("#edt_mArea").val().length == 0){
-                    $.get("{{ route('admin.settings.postNewManagedAreas') }}",
-                        {
-                            name:edit_name,
-                            zip_code:edit_zipcode,
-                            color:edit_color,
-                        },
-                        function (data) {
-                            if(data!=false){
-                                $("#managedAreaModel").modal('toggle');
-                                location.reload();
-                            }
-                            else{
-                                alert("Warning!");
-                            }                                
-                    }); 
-                }
-                else{
-                    $.get("{{ route('admin.settings.postEditManagedAreas') }}",
-                        {
-                            id:edit_id,
-                            name:edit_name,
-                            zip_code:edit_zipcode,
-                            color:edit_color,
-                        },
-                        function (data) {
-                            if(data!=false){  
-                                console.log(data.edit_color);
-                                $("#managedAreaModel").modal('toggle');
-                            location.reload();
-                            }
-                            else{
-                            alert("Warning!");
-                            }                                
-                    }); 
-                }  
-
-            });
-
-            function allServiceTableMake(data){
-
-                var addTR = "";
-
-                for(var i =0;i<data.length;i++){
-                    addTR+="<tr><td>"+(i+1)+"</td>";
-                    addTR+="<td id='mArea"+data[i].id+"'>"+data[i].name+"</td>";
-                    addTR+="<td id='mAreasZipCode"+data[i].id+"'>"+data[i].zip_code+"</td>";
-                    addTR+="<td id='mAreaColor"+data[i].id+"'>"+data[i].color+"</td>";
-                    addTR+="<td><a href='#!' class='btn btn-icon btn-primary mr-1' data-toggle='tooltip' title='Edit' onClick='editManagedarea("+JSON.stringify(data[i])+")'><i class='feather icon-edit-2'></i></a>";
-                    addTR+="<a href='#!' class='btn btn-icon btn-danger mr-1' data-toggle='tooltip' title='Delete' onClick='deleteManagedarea("+data[i].id+","+i+")'><i class='feather icon-trash-2'></i></a>";
-                    addTR+="</td></tr>";
-                }
-
-                $("#addServiceTR").html(addTR);
-
-            }
-
-            function objectFindByKey(array, key, value){
-                for (var i = 0; i < array.length; i++) {
-                    if (array[i][key] === value) {
-                        indexKey = i;
-                        return array[i];
-                    }
-                }
-                return null;
-            }
         }
 
+        $(".btn_saveChange").click(function(){
+
+            var edit_id, edit_name, edit_zipcode, edit_color, addTr;
+
+            edit_id = $("#edt_mArea").val();
+            edit_name = $("#edit_mArea").val();
+            edit_zipcode = $("#edit_mAreasZipCode").val();
+            edit_color = $("#edit_mAreaColor").val();   
+                    
+            if($("#edt_mArea").val().length == 0){
+                $.get("{{ route('admin.settings.postNewManagedAreas') }}",
+                    {
+                        name:edit_name,
+                        zip_code:edit_zipcode,
+                        color:edit_color,
+                    },
+                    function (data) {
+                        if(data!=false){
+                            $("#managedAreaModel").modal('toggle');
+                            location.reload();
+                        }
+                        else{
+                            alert("Warning!");
+                        }                                
+                }); 
+            }
+            else{
+                $.get("{{ route('admin.settings.postEditManagedAreas') }}",
+                    {
+                        id:edit_id,
+                        name:edit_name,
+                        zip_code:edit_zipcode,
+                        color:edit_color,
+                    },
+                    function (data) {
+                        if(data!=false){  
+                            console.log(data.edit_color);
+                            $("#managedAreaModel").modal('toggle');
+                        location.reload();
+                        }
+                        else{
+                        alert("Warning!");
+                        }                                
+                }); 
+            }  
+
+        });
+
+        function allServiceTableMake(data){
+
+            var addTR = "";
+
+            for(var i =0;i<data.length;i++){
+                addTR+="<tr><td>"+(i+1)+"</td>";
+                addTR+="<td id='mArea"+data[i].id+"'>"+data[i].name+"</td>";
+                addTR+="<td id='mAreasZipCode"+data[i].id+"'>"+data[i].zip_code+"</td>";
+                addTR+="<td id='mAreaColor"+data[i].id+"'>"+data[i].color+"</td>";
+                addTR+="<td><a href='#!' class='btn btn-icon btn-primary mr-1' data-toggle='tooltip' title='Edit' onClick='editManagedarea("+JSON.stringify(data[i])+")'><i class='feather icon-edit-2'></i></a>";
+                addTR+="<a href='#!' class='btn btn-icon btn-danger mr-1' data-toggle='tooltip' title='Delete' onClick='deleteManagedarea("+data[i].id+","+i+")'><i class='feather icon-trash-2'></i></a>";
+                addTR+="</td></tr>";
+            }
+
+            $("#addServiceTR").html(addTR);
+
+        }
+
+        function objectFindByKey(array, key, value){
+            for (var i = 0; i < array.length; i++) {
+                if (array[i][key] === value) {
+                    indexKey = i;
+                    return array[i];
+                }
+            }
+            return null;
+        }
+    
     </script>
 @endsection

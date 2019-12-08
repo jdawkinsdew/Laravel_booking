@@ -101,52 +101,37 @@
     <!-- Edit Modal Ends -->
 
     <!-- Main Content -->
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);"><i class="feather icon-home"></i></a></li>
-                            <li class="breadcrumb-item active">Settings</li>
-                        </ol>
-                    </div>
-                    <h4 class="page-title">Providers Detail</h4>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Details</h5>
+                    <a href="#!" class="btn btn-success float-right" id="detailProvider" >Save</a>
+                    <a href="{{ route('admin.settings.providers')}}" class="btn btn-warning float-right">Back</a>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Details</h5>
-                        <a href="#!" class="btn btn-success float-right" id="detailProvider" >Save</a>
-                        <a href="{{ route('admin.settings.providers')}}" class="btn btn-warning float-right">Back</a>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-10" id="multiSelect">
+                            <h3 class="mb-1 mt-3">Service Select</h3> 
+                            <div id="ServicePart"></div>                                                                                        
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-10" id="multiSelect">
-                                <h3 class="mb-1 mt-3">Service Select</h3> 
-                                <div id="ServicePart"></div>                                                                                        
-                            </div>
+                    <div class="row">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-10" id="multiSelect">
+                            <h3 class="mb-1 mt-3">Area Select</h3> 
+                            <div id="WorkingPart"></div>                                                                                        
                         </div>
-                        <div class="row">
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-10" id="multiSelect">
-                                <h3 class="mb-1 mt-3">Area Select</h3> 
-                                <div id="WorkingPart"></div>                                                                                        
-                            </div>
-                        </div>
-                        <div class="row">                                                          
-                            <div class="col-sm-1"></div>
-                            <div class="col-sm-10">
-                                <h3 class="mb-1 mt-3">Days Select</h3> 
-                                <div class="calendar"></div>
-                            </div>                                                      
-                        </div>                    
-                    </div>                                       
-                </div>
+                    </div>
+                    <div class="row">                                                          
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-10">
+                            <h3 class="mb-1 mt-3">Days Select</h3> 
+                            <div class="calendar"></div>
+                        </div>                                                      
+                    </div>                    
+                </div>                                       
             </div>
         </div>
     </div>
@@ -189,16 +174,14 @@
         var serviceId = [];
 
         $(document).ready(function(){
-        // Initiailize Part
-         avail_services = @json($avail_services);
-        all_services = @json($allservices);
-        block_days = @json($provider->block_days);
-        all_areas = @json($areas);
-        working_areas = @json($provider->areas);
-        ///////////////////////////////
 
-            for (var i = 0; i<block_days.length;i++)
-            {
+            avail_services = @json($avail_services);
+            all_services = @json($allservices);
+            block_days = @json($provider->block_days);
+            all_areas = @json($areas);
+            working_areas = @json($provider->areas);
+
+            for (var i = 0; i<block_days.length;i++){
                 var element = {};
                 element.id = block_days[i]["id"];  
                 element.title = block_days[i]["reason"];  
@@ -208,7 +191,9 @@
                 element.textColor = '#fff';
                 graph_data.push(element);      
             }      
-            Rendering(graph_data); 
+
+            Rendering(graph_data);
+            
         });
    
         function Rendering(data){

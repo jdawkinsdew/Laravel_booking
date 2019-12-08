@@ -6,17 +6,18 @@
             {{$user->username}}
         </td>
         <td>
-         @if($user->role_id==1)
-        Super Administrator
-        @elseif($user->role_id==2)
-        Administrator
-        @elseif($user->role_id==3)
-        Manager
-        @elseif($user->role_id==4)
-        Service Provider
-        @elseif($user->role_id==5)
-        Client
-        @endif</td>
+            @if($user->role_id==1)
+                Super Administrator
+            @elseif($user->role_id==2)
+                Administrator
+            @elseif($user->role_id==3)
+                Manager
+            @elseif($user->role_id==4)
+                Service Provider
+            @elseif($user->role_id==5)
+                Client
+            @endif
+        </td>
         <td>
             {{$user->email}}
         </td>
