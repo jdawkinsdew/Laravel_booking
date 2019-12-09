@@ -35,6 +35,7 @@ class LoginController extends Controller
     {
         $auth_admin = Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password, 'active'=> 1, 'role_id'=>1]);
         $auth_client = Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password, 'role_id'=> 5]);
+        $auth_provider = Auth::guard('web')->attempt(['username' => $request->username, 'password' => $request->password, 'role_id'=> 2]);
         
         if($auth_admin)
         {
@@ -42,6 +43,9 @@ class LoginController extends Controller
         }
         if($auth_client){
             return redirect()->route('client.index');
+        }
+        if($auth_provider){
+            return redirect()->route('provider.mybooking');
         }
           return redirect()->route('/');
     } 

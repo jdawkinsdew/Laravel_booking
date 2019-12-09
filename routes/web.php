@@ -133,13 +133,18 @@ Route::group(['as'=>'admin.','prefix'=>'admin','namespace'=>'Admin',['middleware
  });
 
 
- Route::group(['as'=>'client.','prefix'=>'client','namespace'=>'Client', ['middleware' => ['authen', 'roles'],'roles'=>['client']]], function(){
+Route::group(['as'=>'client.','prefix'=>'client','namespace'=>'Client', ['middleware' => ['authen', 'roles'],'roles'=>['client']]], function(){
     Route::get('index',['as'=>'index','uses'=>'MainController@index']);
     Route::get('/selectAjax', 'MainController@selectAjax')->name('selectAjax');
     Route::post('/clientBooking',['as'=>'clientBooking','uses'=>'MainController@addBooking']);
     Route::post('selectProvider/onetime',['as'=>'selectProvider.onetime','uses'=>'MainController@selectProvider']);
-    
-    
+});
+
+Route::group(['as'=>'provider.','prefix'=>'provider','namespace'=>'Provider', ['middleware' => ['authen', 'roles'],'roles'=>['provider']]], function(){
+    Route::get('mybooking',['as'=>'mybooking','uses'=>'MyBookingController@getBooking']);
+    Route::get('detail',['as'=>'detail','uses'=>'MyBookingController@detail']);
+    Route::post('/clientBooking',['as'=>'clientBooking','uses'=>'MainController@addBooking']);
+    Route::post('selectProvider/onetime',['as'=>'selectProvider.onetime','uses'=>'MainController@selectProvider']);
 });
 
 

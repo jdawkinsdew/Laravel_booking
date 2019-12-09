@@ -82,6 +82,13 @@ class MainController extends Controller
             $booking->recurr_type = 0;
             $booking->save();
         }
+        $allservices = Service::all();
+        $areas = Managed_Area::all();
+        $today = Carbon::now()->format('Y-m-d');
+        $allBlockdays = Blockdays::all();
+        $allBookings = Booking::all();
+        $availableServices = Availableservice::all();
+        return view('client.booking', compact('allservices', 'areas', 'today', 'allBlockdays', 'allBookings', 'availableServices'));
     }
     
     public function addBooking(Request $request){
@@ -135,9 +142,10 @@ class MainController extends Controller
                 if($availableCount == $allCount)
                 {
                     $this->saveBooking($provider['id'],$request);
+                    break;
                 }
             }
-            dd($start_date);
+            return back();
         }        
     }
 
